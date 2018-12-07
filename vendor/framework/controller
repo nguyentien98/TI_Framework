@@ -1,0 +1,10 @@
+<?php
+
+namespace Controllers;
+
+use Core\BaseController;
+use Helpers\HttpRequest;
+
+class --controller-- extends BaseController
+{
+}

@@ -1,0 +1,71 @@
+<?php
+
+function color($string, $color)
+{
+    $colors = [
+        'red' => 41,
+        'green' => '0;32'
+    ];
+
+    return "\033[$colors[$color]m$string\033[0m\n";
+}
+
+define('FRAMEWORK_ROOT', dirname(__FILE__));
+
+$allowedActions = [
+    'make'
+];
+
+$allowedPointers = [
+    'controller',
+    'model',
+];
+
+array_shift($argv);
+
+if (count($argv) === 0) {
+    echo color('Missing action.', 'red');
+    exit;
+}
+
+[$action, $pointer] = explode(':', $argv[0]);
+
+$fileName = isset($argv[1]) ? $argv[1] : null;
+
+if (!in_array($action, $allowedActions)) {
+    echo color("'$action' action not found.", 'red');
+    exit;
+}
+
+if (!in_array($pointer, $allowedPointers)) {
+    echo color("'$pointer' is not defined.", 'red');
+    exit;
+}
+
+if (!$fileName) {
+    echo color("Please enter file name.", 'red');
+    exit;
+}
+
+switch ($pointer) {
+    case 'controller':
+        $baseControllerContent = file_get_contents(constant('FRAMEWORK_ROOT') . '/vendor/framework/controller');
+        $baseControllerContent = str_replace('--controller--', $fileName, $baseControllerContent);
+        if (file_exists(constant('FRAMEWORK_ROOT') . '/Controllers/' . $fileName . '.php')) {
+            echo color("'$fileName' is already exists.", 'red');
+            exit;
+        }
+        if (
+            file_put_contents(
+                constant('FRAMEWORK_ROOT') . '/Controllers/' . $fileName . '.php',
+                $baseControllerContent
+            )
+        ) {
+            echo color("Controller created successfully.", 'green');
+        };
+        break;
+    
+    default:
+        echo color("Error.", 'red');
+        break;
+}
