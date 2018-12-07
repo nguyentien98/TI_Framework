@@ -10,6 +10,6 @@ class HomeController extends BaseController
 {
     public function index(HttpRequest $request)
     {
-        var_dump(config('config.logo.list.name'));
+        var_dump(User::where('name', '=', '1')->where('name', '!=', '1')->get());
     }
 }
