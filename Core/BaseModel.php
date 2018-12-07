@@ -2,46 +2,26 @@
 
 namespace Core;
 
-use Core\DBConnection;
+use Core\QueryBuilder;
 
 class BaseModel
 {
-    protected $connection;
-    protected $operators = ['>', '<', '>=', '<=', 'LIKE'];
-    protected static $query;
-    protected static $where;
-    protected static $select = '*';
     public $table;
-
-    public function __construct()
-    {
-        $this->connection = DBConnection::getConnection();
-    }
-
-    public static function where($column, $operator, $value)
-    {
-        if (!in_array($operator, $this->operators)) {
-            throw new \Exception('Operator is not allowed.');
-        }
-        if (self::$where) {
-            self::$where .= "WHERE $column $operator '$value'";
-        } else {
-            self::$where .= " AND WHERE $column $operator '$value'";
-        }
-        $model = self;
-
-        return $model;
-    }
+    protected static $builder = null;
 
     public static function get()
     {
-        self::$query = "SELECT $select FROM $table $where";
-
-        return self;
+        return $this->builder;
     }
 
-    public function toSql()
+    public static function __callStatic($name, $arguments)
     {
-        return $this->query;
+        $model = new static;
+        $queryBuilder = new QueryBuilder($model->table);
+        if (!method_exists($model, $name) && method_exists($queryBuilder, $name)) {
+            self::$builder = call_user_func_array([$queryBuilder, $name], $arguments);
+
+            return self::$builder;
+        }
     }
 }
