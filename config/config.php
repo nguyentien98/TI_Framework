@@ -13,8 +13,8 @@ return [
         'alt' => 'Hihihi',
         'list' => [
             'name' => [
-                'hello' => 'Hihi'
-            ]
+                'hello' => 'Hihi',
+            ],
         ],
     ],
 ];
