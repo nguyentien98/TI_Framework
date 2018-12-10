@@ -6,6 +6,7 @@ use Helpers\HttpRequest;
 use Core\Routing\Route;
 use ReflectionClass;
 use ReflectionMethod;
+use Core\Container;
 
 class Router
 {
@@ -37,31 +38,13 @@ class Router
         }
 
         $controller = 'Controllers\\' . $currentAction->controller;
-        $controller = new $controller;
-        $function = $currentAction->function;
-
-        if (!method_exists($controller, $function)) {
-            throw new \Exception("Route: Method $function is not defined in $currentAction->controller.");
+        $method = $currentAction->function;
+        
+        if (!method_exists($controller, $method)) {
+            throw new \Exception("Route: Method $method is not defined in $currentAction->controller.");
         }
 
-        $argsMethod = $this->getArgsOfMethod($controller, $function);
-
-        return call_user_func_array([$controller, $function], $argsMethod);
-    }
-
-    public function getArgsOfMethod($controller, $function)
-    {
-        $reflection = new ReflectionMethod($controller, $function);
-        $argsMethod = [];
-        foreach ($reflection->getParameters() as $param) {
-            if ($paramClass = $param->getClass()->name) {
-                $argsMethod[] = new $paramClass;
-            } else {
-                $argsMethod[] = $param;
-            }
-        }
-
-        return $argsMethod;
+        return Container::methodResolve($controller, $method);
     }
 
     protected function setPath()

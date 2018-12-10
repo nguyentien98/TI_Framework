@@ -10,6 +10,6 @@ class HomeController extends BaseController
 {
     public function index(HttpRequest $request)
     {
-        var_dump(User::find(1));
+        var_dump($request->path);
     }
 }
