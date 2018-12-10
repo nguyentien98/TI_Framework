@@ -24,7 +24,7 @@ class Router
         $this->setPath();
 
         if (!$this->path) {
-            throw new \Exception('Route: Url can must be provided.');
+            throw new \Exception('Route: Url must be provided.');
         }
 
         if (!array_key_exists($this->path, $this->routes)) {

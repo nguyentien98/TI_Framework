@@ -5,7 +5,7 @@ return [
         'host' => 'localhost',
         'port' => 3306,
         'username' => 'root',
-        'database' => 'tifw',
+        'database' => 'project2',
         'password' => 'Aa@123456',
     ],
     'logo' => [

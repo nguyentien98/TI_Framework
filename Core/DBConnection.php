@@ -16,8 +16,11 @@ class DBConnection
     {
         $config = config('config.DB_Connect');
         try {
-            $connection = new PDO('mysql:host=' . $config['host'] . ';dbname=' . $config['database'], $config['username'], $config['password']);
-            $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+            $connection = new PDO(
+                'mysql:host=' . $config['host'] . ';dbname=' . $config['database'],
+                $config['username'], $config['password'],
+                array(PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES utf8')
+            );
 
             return $connection;
         } catch (PDOException $e) {
