@@ -4,6 +4,7 @@ namespace Core;
 
 use Core\DBConnection;
 use PDO;
+
 class QueryBuilder
 {
     protected $operators = ['>', '<', '>=', '<=', '=', 'LIKE', '!=', 'BETWEEN'];
