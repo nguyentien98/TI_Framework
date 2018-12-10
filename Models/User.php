@@ -6,5 +6,6 @@ use Core\BaseModel;
 
 class User extends BaseModel
 {
-    public $table = 'users';
+    protected $table = 'users';
+    protected $primaryKey = 'id';
 }

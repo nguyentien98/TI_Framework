@@ -6,18 +6,47 @@ use Core\QueryBuilder;
 
 class BaseModel
 {
-    public $table;
+    protected $table;
     protected static $builder = null;
+    protected $attributes = [];
+    protected $primaryKey = null;
 
-    public static function get()
+    // public static function get()
+    // {
+    //     return $this->builder;
+    // }
+
+    public function setAttributes($data)
     {
-        return $this->builder;
+        if (!is_array($data)) {
+            return;
+        }
+        $this->attributes = $data;
+    }
+
+    public function __get($name)
+    {
+        if (array_key_exists($name, $this->attributes)) {
+            return $this->attributes[$name];
+        }
+
+        return null;
+    }
+
+    public function getPrimaryKey()
+    {
+        return $this->primaryKey;
+    }
+
+    public function getTable()
+    {
+        return $this->table;
     }
 
     public static function __callStatic($name, $arguments)
     {
         $model = new static;
-        $queryBuilder = new QueryBuilder($model->table);
+        $queryBuilder = new QueryBuilder($model);
         if (!method_exists($model, $name) && method_exists($queryBuilder, $name)) {
             self::$builder = call_user_func_array([$queryBuilder, $name], $arguments);
 
